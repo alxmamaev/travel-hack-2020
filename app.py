@@ -5,9 +5,11 @@ from flask import Flask
 from google.cloud import vision
 from google.cloud.vision import types
 from flask import jsonify
+from flask_cors import CORS
 
 
 app = Flask(__name__)
+CORS(app)
 client = vision.ImageAnnotatorClient()
 
 
