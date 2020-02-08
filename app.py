@@ -8,6 +8,7 @@ from flask import jsonify
 from flask_cors import CORS
 from random import choice
 from string import ascii_lowercase
+import base64
 
 
 app = Flask(__name__)
@@ -23,8 +24,13 @@ def get_random_filename():
 @app.route("/process_photo", methods=['POST'])
 def process_photo():
     print("starting processing")
-    file = flask.request.files.get('photo', '')
-    photo_content = file.read()
+    file = flask.request.files.get('photo', None)
+
+    if file is not None:
+        photo_content = file.read()
+    else:
+        image = flask.request.form["b64photo"]
+        photo_content = base64.decodebytes(image.encode('utf-8'))
 
 
     photo = types.Image(content=photo_content)
@@ -50,6 +56,7 @@ def process_photo():
     print("done")
     return jsonify(response)
 
+    
 
 @app.route('/img/<path:filename>') 
 def send_file(filename): 
