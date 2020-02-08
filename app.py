@@ -56,7 +56,7 @@ def process_image(image, city):
 
 
 def get_random_filename():
-    return "".join([choice(ascii_lowercase) for i in range(15)]) + ".jpg"
+    return "".join([choice(ascii_lowercase) for i in range(15)]) + ".png"
 
 
 @app.route("/process_photo", methods=['POST'])
