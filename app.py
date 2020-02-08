@@ -1,6 +1,7 @@
 import io
 import os
 import flask
+import json
 from flask import Flask
 from google.cloud import vision
 from google.cloud.vision import types
@@ -29,8 +30,8 @@ def process_photo():
     if file is not None:
         photo_content = file.read()
     else:
-        image = flask.request.form["b64photo"]
-        photo_content = base64.decodebytes(image.encode('utf-8'))
+        data = json.loads(flask.request.data.decode())
+        photo_content = base64.decodebytes(data["b64photo"].encode('utf-8'))
 
 
     photo = types.Image(content=photo_content)
