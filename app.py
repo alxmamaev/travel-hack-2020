@@ -22,6 +22,7 @@ def get_random_filename():
 
 @app.route("/process_photo", methods=['POST'])
 def process_photo():
+    print("starting processing")
     file = flask.request.files.get('photo', '')
     photo_content = file.read()
 
@@ -46,6 +47,7 @@ def process_photo():
             f.write(photo_content)
         response["filename"] = filename
 
+    print("done")
     return jsonify(response)
 
 
