@@ -10,12 +10,41 @@ from flask_cors import CORS
 from random import choice
 from string import ascii_lowercase
 import base64
+import PIL
+from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw 
 
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = "./uploads"
 CORS(app)
 client = vision.ImageAnnotatorClient()
+
+
+
+def process_image(image, city):
+    a = image.size[0] / 9
+    b = image.size[1] / 16
+    
+    c = min(a, b)
+    
+    a = (image.size[0] - c * 9) // 2
+    b = (image.size[1] - c * 16) // 2
+    
+    image = image.crop((a, b, a + c * 9, b + c * 16))
+    image = image.resize((540, 960))
+    
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.truetype("Graphik-Black-Web.ttf", 30)
+    draw.text((145, 142),"Мое #МегаПутешествие", fill=(0,185,86,255),font=font)
+    
+    
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.truetype("Graphik-Black-Web.ttf", 70)
+    draw.text((250, 60),"Лондон", fill=(115,25,130,255),font=font)
+    
+    return image
 
 
 def get_random_filename():
@@ -50,8 +79,14 @@ def process_photo():
                 response["is_selfie"] = True
 
         filename = get_random_filename()
-        with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), "wb") as f:
+        fpath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        with open(fpath, "wb") as f:
             f.write(photo_content)
+
+        image = PIL.open(fpath)
+        image = process_image(image)
+        image.save(fpath)
+
         response["filename"] = filename
 
     print("done")
