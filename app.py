@@ -81,10 +81,11 @@ def process_photo():
 
         filename = get_random_filename()
         fpath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        with open(fpath, "wb") as f:
-            f.write(photo_content)
+        # with open(fpath, "wb") as f:
+        #     f.write(photo_content)
 
-        image = PIL.Image.open(fpath)
+        # image = PIL.Image.open(fpath)
+        image = Image.open(io.BytesIO(photo_content))
         image = process_image(image, city)
         image.save(fpath)
 
