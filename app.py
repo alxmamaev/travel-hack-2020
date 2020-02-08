@@ -24,25 +24,33 @@ client = vision.ImageAnnotatorClient()
 
 
 def process_image(image, city):
-    a = image.size[0] / 9
-    b = image.size[1] / 16
+    a = image.size[0] / 3
+    b = image.size[1] / 4
     
     c = min(a, b)
     
-    a = (image.size[0] - c * 9) // 2
-    b = (image.size[1] - c * 16) // 2
+    a = (image.size[0] - c * 3) // 2
+    b = (image.size[1] - c * 4) // 2
     
-    image = image.crop((a, b, a + c * 9, b + c * 16))
-    image = image.resize((540, 960))
+    image = image.crop((a, b, a + c * 3, b + c * 4))
+    image = image.resize((975, 1300))
+    
+    
+    back = PIL.Image.open("clear.png")
+    back.paste(image, (60, 52))
+    image = back
     
     draw = ImageDraw.Draw(image)
-    font = ImageFont.truetype("Graphik-Black-Web.ttf", 30)
-    draw.text((145, 142),"Мое #МегаПутешествие", fill=(0,185,86,255),font=font)
-    
+    font = ImageFont.truetype("Graphik-Black-Web.ttf", 62)
+    draw.text((60, 1540),"Мое #МегаПутешествие", fill=(115,25,130,255),font=font)
     
     draw = ImageDraw.Draw(image)
-    font = ImageFont.truetype("Graphik-Black-Web.ttf", 70)
-    draw.text((250, 60), city, fill=(115,25,130,255),font=font)
+    font = ImageFont.truetype("Graphik-Black-Web.ttf", 62)
+    draw.text((63, 1540),"             #Мега", fill=(0,185,86,255),font=font)
+    
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.truetype("Graphik-Black-Web.ttf", 130)
+    draw.text((60, 1400), city, fill=(115,25,130,255),font=font)
     
     return image
 
