@@ -42,7 +42,7 @@ def process_image(image, city):
     
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype("Graphik-Black-Web.ttf", 70)
-    draw.text((250, 60),"Лондон", fill=(115,25,130,255),font=font)
+    draw.text((250, 60), city, fill=(115,25,130,255),font=font)
     
     return image
 
@@ -60,6 +60,7 @@ def process_photo():
         photo_content = file.read()
     else:
         data = json.loads(flask.request.data.decode())
+        city = data["trip"]
         photo_content = base64.decodebytes(data["b64photo"].encode('utf-8'))
 
 
@@ -83,8 +84,8 @@ def process_photo():
         with open(fpath, "wb") as f:
             f.write(photo_content)
 
-        image = PIL.open(fpath)
-        image = process_image(image)
+        image = PIL.Image.open(fpath)
+        image = process_image(image, city)
         image.save(fpath)
 
         response["filename"] = filename
